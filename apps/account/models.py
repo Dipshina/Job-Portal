@@ -26,7 +26,7 @@ class UserProfile(BaseModel):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     profile_picture = models.FileField(null=True, blank=True, upload_to="profile_pictures/")
     address = models.CharField(max_length=30)
-    phone = models.CharField(max_length=14)
+    phone = models.CharField(max_length=20)
     bio = models.TextField(max_length=500)
     resume = models.FileField(null=True, blank=True, upload_to="resumes/")
 

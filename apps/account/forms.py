@@ -1,4 +1,5 @@
 from django import forms
+from apps.core.models import Contact
 
 
 class LoginForm(forms.Form):
@@ -14,18 +15,28 @@ class RegisterForm(forms.Form):
     middle_name = forms.CharField(max_length=20, required=False)
     last_name = forms.CharField(max_length=20)
     address = forms.CharField(max_length=30)
-    phone = forms.CharField(max_length=14)
+    phone = forms.CharField(max_length=20)
     bio = forms.CharField(widget=forms.Textarea())
 
 
 class UserProfileForm(forms.Form):
     first_name = forms.CharField(max_length=20)
     last_name = forms.CharField(max_length=20)
-    phone_number = forms.CharField(max_length=14)
+    phone_number = forms.CharField(max_length=20)
     profile_picture = forms.FileField(required=False)
     address = forms.CharField(max_length=50)
     bio = forms.CharField(widget=forms.Textarea())
     resume = forms.FileField(required=False)
+
+    def validate(self):
+        print("In resume")
+        cleaned_data = self.cleaned_data
+        resume = self.cleaned_data.get("resume")
+        if resume:
+            extension = resume.name.split(".")[-1]  # resume.pdf  ["resume", "pdf"]
+            if extension not in ["pdf", "PDF"]:
+                raise forms.ValidationError("Please upload resume in pdf !")
+        return cleaned_data
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop("user", None)
@@ -43,3 +54,9 @@ class UserProfileForm(forms.Form):
                 self.fields["address"].initial = profile.address
                 self.fields["bio"].initial = profile.bio
                 self.fields["resume"].initial = profile.resume
+
+
+class ContactForm(forms.ModelForm):
+    class Meta:
+        model = Contact
+        fields = ["name", "email", "phone_number", "message"]
