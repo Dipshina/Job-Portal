@@ -1,23 +1,137 @@
 {% extends 'layouts/base_with_nav.html' %}
 
 {% block sub_block %}
-    <div>
-        {% for job in jobs %}
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">{{ job.title }}</h5>
-                    <p class="card-text">{{ job.description }}
-                        <span style="color: white; background-color: darkgreen;
-                        padding: 3px; border-radius: 5px; font-size: 11px">{{ job.category.title }}</span>
-                    </p>
-                    {% if request.user.is_authenticated %}
-                        <a href="{% url 'apply_confirm' job.id %}" class="card-link btn btn-success">Apply</a>
-                        {% else %}
-                        <button class="card-link btn btn-success" onclick="applyAlert()">Apply</button>
-                    {% endif %}
-                    <a href="{% url 'job_detail' job.id %}" class="card-link btn btn-outline-success">Detail</a>
-                </div>
-            </div><br>
-        {% endfor %}
+    <!-- Portal Introduction Section -->
+    <div class="container text-center my-5 fade-in">
+        <h2 class="display-4">Welcome to Our Job Portal</h2>
+        <p class="lead">
+            Discover exciting career opportunities, apply to jobs that match your skills and interests, and take the next step in your career journey. 
+            Whether you are looking for a full-time job, part-time work, or an internship, we have something for everyone!
+        </p>
+        <p class="mb-4">
+            Our platform connects talented professionals like you with top employers across various industries. Join our community today and start your journey towards your dream job!
+        </p>
+        <a href="{% url 'user_register' %}" class="btn btn-primary btn-lg">Register Now</a>
     </div>
+
+    <!-- Job Listings Section -->
+    <div class="container fade-in">
+        <h3 class="text-center my-4">Available Job Listings</h3>
+        <div class="row">
+            {% for job in jobs %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">{{ job.title }}</h5>
+                            <p class="card-text text-muted">
+                                {{ job.description|truncatechars:100 }}
+                                <span class="badge bg-success text-white ms-2">{{ job.category.title }}</span>
+                            </p>
+                            <div class="d-flex justify-content-between">
+                                {% if request.user.is_authenticated %}
+                                    <a href="{% url 'apply_confirm' job.id %}" class="btn btn-success">Apply</a>
+                                {% else %}
+                                    <button class="btn btn-success" onclick="applyAlert()">Apply</button>
+                                {% endif %}
+                                <a href="{% url 'job_detail' job.id %}" class="btn btn-outline-success">Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <p class="text-center">No job listings available at the moment. Check back soon!</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- How to Apply Section -->
+    <div class="container text-center my-5 fade-in">
+        <h4 class="fw-bold">How to Apply</h4>
+        <p class="text-muted">
+            Applying for a job is simple! Just browse through our listings, click "Apply," and follow the steps to submit your application. 
+            If you're not logged in, create an account first to get started!
+        </p>
+        <p class="mb-4 text-muted">Once registered, you can track your applications, manage your profile, and receive notifications about new job openings.</p>
+    </div>
+
+    <!-- JavaScript for Alert -->
+    <script>
+        function applyAlert() {
+            alert("Please log in to apply for jobs.");
+        }
+
+        // Smooth Scrolling for Navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener("click", function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute("href")).scrollIntoView({
+                    behavior: "smooth"
+                });
+            });
+        });
+
+        // Fade-in Animation on Scroll
+        document.addEventListener("DOMContentLoaded", function () {
+            const sections = document.querySelectorAll(".fade-in");
+
+            function fadeInSection() {
+                sections.forEach((section) => {
+                    const sectionTop = section.getBoundingClientRect().top;
+                    if (sectionTop < window.innerHeight - 100) {
+                        section.classList.add("visible");
+                    }
+                });
+            }
+
+            window.addEventListener("scroll", fadeInSection);
+            fadeInSection();
+        });
+    </script>
+
+    <!-- Styles for Animations & Buttons -->
+    <style>
+        /* Fade-in Animation */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Improved Button Styles */
+        .btn-primary {
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            border: none;
+            transition: 0.3s ease-in-out;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(45deg, #0056b3, #004080);
+            transform: scale(1.05);
+        }
+        .btn-success {
+            background: linear-gradient(45deg, #28a745, #1e7e34);
+            transition: 0.3s ease-in-out;
+        }
+        .btn-success:hover {
+            background: linear-gradient(45deg, #1e7e34, #155d27);
+            transform: scale(1.05);
+        }
+        .btn-outline-success:hover {
+            background-color: #28a745;
+            color: white;
+        }
+
+        /* Card Styling */
+        .card {
+            border-radius: 10px;
+            transition: transform 0.3s ease-in-out;
+        }
+        .card:hover {
+            transform: scale(1.02);
+        }
+    </style>
+
 {% endblock %}

@@ -3,18 +3,18 @@ from apps.core.models import Contact
 
 
 class LoginForm(forms.Form):
-    email = forms.EmailField(max_length=20)
+    email = forms.EmailField(max_length=50)
     password = forms.CharField(widget=forms.PasswordInput())
 
 
 class RegisterForm(forms.Form):
-    email = forms.EmailField(max_length=20)
+    email = forms.EmailField(max_length=50)
     password = forms.CharField(widget=forms.PasswordInput())
     confirm_password = forms.CharField(widget=forms.PasswordInput())
     first_name = forms.CharField(max_length=20)
     middle_name = forms.CharField(max_length=20, required=False)
     last_name = forms.CharField(max_length=20)
-    address = forms.CharField(max_length=30)
+    address = forms.CharField(max_length=100)
     phone = forms.CharField(max_length=20)
     bio = forms.CharField(widget=forms.Textarea())
 
@@ -24,7 +24,7 @@ class UserProfileForm(forms.Form):
     last_name = forms.CharField(max_length=20)
     phone_number = forms.CharField(max_length=20)
     profile_picture = forms.FileField(required=False)
-    address = forms.CharField(max_length=50)
+    address = forms.CharField(max_length=100)
     bio = forms.CharField(widget=forms.Textarea())
     resume = forms.FileField(required=False)
 
